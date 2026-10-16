@@ -1,0 +1,419 @@
+[
+    {
+        "updatedAt":  "2026-10-16T08:11:25.000Z",
+        "createdAt":  "2026-10-16T08:03:39.738Z",
+        "id":  "AivaErrors000001",
+        "name":  "Айва — обработчик ошибок",
+        "description":  null,
+        "active":  true,
+        "isArchived":  false,
+        "nodes":  [
+                      {
+                          "id":  "e7c34aa2-410c-49d5-8277-4e502d86f946",
+                          "name":  "Error Trigger",
+                          "type":  "n8n-nodes-base.errorTrigger",
+                          "typeVersion":  1,
+                          "position":  [
+                                           0,
+                                           0
+                                       ],
+                          "parameters":  {
+
+                                         }
+                      },
+                      {
+                          "id":  "ef3c74c0-8896-46ad-8c77-d5065d92894a",
+                          "name":  "Описание ошибки",
+                          "type":  "n8n-nodes-base.set",
+                          "typeVersion":  3.4,
+                          "position":  [
+                                           220,
+                                           0
+                                       ],
+                          "parameters":  {
+                                             "assignments":  {
+                                                                 "assignments":  [
+                                                                                     {
+                                                                                         "id":  "9b11b6ae-9416-4a9f-98a0-a7b88557e187",
+                                                                                         "name":  "loggedAt",
+                                                                                         "value":  "={{ $now.toFormat(\"yyyy-MM-dd HH:mm:ss\") }}",
+                                                                                         "type":  "string"
+                                                                                     },
+                                                                                     {
+                                                                                         "id":  "2609340c-e320-43aa-bd56-554c291a56b9",
+                                                                                         "name":  "workflowName",
+                                                                                         "value":  "={{ $json.workflow.name }}",
+                                                                                         "type":  "string"
+                                                                                     },
+                                                                                     {
+                                                                                         "id":  "329816e0-b2f0-4023-9b28-268114c64f0d",
+                                                                                         "name":  "node",
+                                                                                         "value":  "={{ $json.execution.lastNodeExecuted || \"—\" }}",
+                                                                                         "type":  "string"
+                                                                                     },
+                                                                                     {
+                                                                                         "id":  "3a66911e-c674-470a-8aee-db80e8ea4618",
+                                                                                         "name":  "errorMessage",
+                                                                                         "value":  "={{ $json.execution.error.message }}",
+                                                                                         "type":  "string"
+                                                                                     },
+                                                                                     {
+                                                                                         "id":  "37e27d0e-ff36-444f-9852-9de8d2b0ff2e",
+                                                                                         "name":  "executionId",
+                                                                                         "value":  "={{ $json.execution.id }}",
+                                                                                         "type":  "string"
+                                                                                     },
+                                                                                     {
+                                                                                         "id":  "1e726c97-d534-4165-9be0-0619b61fdf78",
+                                                                                         "name":  "sendText",
+                                                                                         "value":  "=⚠️ Ошибка в воркфлоу «{{ $json.workflow.name }}»\nУзел: {{ $json.execution.lastNodeExecuted || \"—\" }}\nОшибка: {{ $json.execution.error.message }}\nЗапуск №{{ $json.execution.id }}",
+                                                                                         "type":  "string"
+                                                                                     }
+                                                                                 ]
+                                                             },
+                                             "includeOtherFields":  false,
+                                             "options":  {
+
+                                                         }
+                                         }
+                      },
+                      {
+                          "id":  "a7ebd9ef-0930-4009-980e-5f25e338d0f1",
+                          "name":  "Журнал: таблица aiva_log",
+                          "type":  "n8n-nodes-base.dataTable",
+                          "typeVersion":  1.1,
+                          "position":  [
+                                           440,
+                                           0
+                                       ],
+                          "parameters":  {
+                                             "resource":  "table",
+                                             "operation":  "create",
+                                             "tableName":  "aiva_log",
+                                             "columns":  {
+                                                             "column":  [
+                                                                            {
+                                                                                "name":  "logged_at",
+                                                                                "type":  "string"
+                                                                            },
+                                                                            {
+                                                                                "name":  "source",
+                                                                                "type":  "string"
+                                                                            },
+                                                                            {
+                                                                                "name":  "test_case",
+                                                                                "type":  "string"
+                                                                            },
+                                                                            {
+                                                                                "name":  "chat_id",
+                                                                                "type":  "string"
+                                                                            },
+                                                                            {
+                                                                                "name":  "kind",
+                                                                                "type":  "string"
+                                                                            },
+                                                                            {
+                                                                                "name":  "status",
+                                                                                "type":  "string"
+                                                                            },
+                                                                            {
+                                                                                "name":  "question",
+                                                                                "type":  "string"
+                                                                            },
+                                                                            {
+                                                                                "name":  "answer",
+                                                                                "type":  "string"
+                                                                            },
+                                                                            {
+                                                                                "name":  "error",
+                                                                                "type":  "string"
+                                                                            },
+                                                                            {
+                                                                                "name":  "duration_ms",
+                                                                                "type":  "number"
+                                                                            },
+                                                                            {
+                                                                                "name":  "workflow",
+                                                                                "type":  "string"
+                                                                            }
+                                                                        ]
+                                                         },
+                                             "options":  {
+                                                             "createIfNotExists":  true
+                                                         }
+                                         }
+                      },
+                      {
+                          "id":  "5194840e-9885-4fac-bc29-fb5b568b7a53",
+                          "name":  "Журнал: запись",
+                          "type":  "n8n-nodes-base.dataTable",
+                          "typeVersion":  1.1,
+                          "position":  [
+                                           660,
+                                           0
+                                       ],
+                          "parameters":  {
+                                             "resource":  "row",
+                                             "operation":  "insert",
+                                             "dataTableId":  {
+                                                                 "__rl":  true,
+                                                                 "mode":  "name",
+                                                                 "value":  "aiva_log"
+                                                             },
+                                             "columns":  {
+                                                             "mappingMode":  "defineBelow",
+                                                             "value":  {
+                                                                           "logged_at":  "={{ $(\u0027Описание ошибки\u0027).item.json.loggedAt }}",
+                                                                           "source":  "error_handler",
+                                                                           "test_case":  "",
+                                                                           "chat_id":  "",
+                                                                           "kind":  "notify",
+                                                                           "status":  "workflow_error",
+                                                                           "question":  "",
+                                                                           "answer":  "={{ $(\u0027Описание ошибки\u0027).item.json.sendText }}",
+                                                                           "error":  "={{ $(\u0027Описание ошибки\u0027).item.json.errorMessage }}",
+                                                                           "duration_ms":  "0",
+                                                                           "workflow":  "={{ $(\u0027Описание ошибки\u0027).item.json.workflowName }}"
+                                                                       },
+                                                             "matchingColumns":  [
+
+                                                                                 ],
+                                                             "schema":  [
+                                                                            {
+                                                                                "id":  "logged_at",
+                                                                                "displayName":  "logged_at",
+                                                                                "required":  false,
+                                                                                "defaultMatch":  false,
+                                                                                "display":  true,
+                                                                                "type":  "string",
+                                                                                "readOnly":  false,
+                                                                                "removed":  false
+                                                                            },
+                                                                            {
+                                                                                "id":  "source",
+                                                                                "displayName":  "source",
+                                                                                "required":  false,
+                                                                                "defaultMatch":  false,
+                                                                                "display":  true,
+                                                                                "type":  "string",
+                                                                                "readOnly":  false,
+                                                                                "removed":  false
+                                                                            },
+                                                                            {
+                                                                                "id":  "test_case",
+                                                                                "displayName":  "test_case",
+                                                                                "required":  false,
+                                                                                "defaultMatch":  false,
+                                                                                "display":  true,
+                                                                                "type":  "string",
+                                                                                "readOnly":  false,
+                                                                                "removed":  false
+                                                                            },
+                                                                            {
+                                                                                "id":  "chat_id",
+                                                                                "displayName":  "chat_id",
+                                                                                "required":  false,
+                                                                                "defaultMatch":  false,
+                                                                                "display":  true,
+                                                                                "type":  "string",
+                                                                                "readOnly":  false,
+                                                                                "removed":  false
+                                                                            },
+                                                                            {
+                                                                                "id":  "kind",
+                                                                                "displayName":  "kind",
+                                                                                "required":  false,
+                                                                                "defaultMatch":  false,
+                                                                                "display":  true,
+                                                                                "type":  "string",
+                                                                                "readOnly":  false,
+                                                                                "removed":  false
+                                                                            },
+                                                                            {
+                                                                                "id":  "status",
+                                                                                "displayName":  "status",
+                                                                                "required":  false,
+                                                                                "defaultMatch":  false,
+                                                                                "display":  true,
+                                                                                "type":  "string",
+                                                                                "readOnly":  false,
+                                                                                "removed":  false
+                                                                            },
+                                                                            {
+                                                                                "id":  "question",
+                                                                                "displayName":  "question",
+                                                                                "required":  false,
+                                                                                "defaultMatch":  false,
+                                                                                "display":  true,
+                                                                                "type":  "string",
+                                                                                "readOnly":  false,
+                                                                                "removed":  false
+                                                                            },
+                                                                            {
+                                                                                "id":  "answer",
+                                                                                "displayName":  "answer",
+                                                                                "required":  false,
+                                                                                "defaultMatch":  false,
+                                                                                "display":  true,
+                                                                                "type":  "string",
+                                                                                "readOnly":  false,
+                                                                                "removed":  false
+                                                                            },
+                                                                            {
+                                                                                "id":  "error",
+                                                                                "displayName":  "error",
+                                                                                "required":  false,
+                                                                                "defaultMatch":  false,
+                                                                                "display":  true,
+                                                                                "type":  "string",
+                                                                                "readOnly":  false,
+                                                                                "removed":  false
+                                                                            },
+                                                                            {
+                                                                                "id":  "duration_ms",
+                                                                                "displayName":  "duration_ms",
+                                                                                "required":  false,
+                                                                                "defaultMatch":  false,
+                                                                                "display":  true,
+                                                                                "type":  "number",
+                                                                                "readOnly":  false,
+                                                                                "removed":  false
+                                                                            },
+                                                                            {
+                                                                                "id":  "workflow",
+                                                                                "displayName":  "workflow",
+                                                                                "required":  false,
+                                                                                "defaultMatch":  false,
+                                                                                "display":  true,
+                                                                                "type":  "string",
+                                                                                "readOnly":  false,
+                                                                                "removed":  false
+                                                                            }
+                                                                        ],
+                                                             "attemptToConvertTypes":  false,
+                                                             "convertFieldsToString":  false
+                                                         },
+                                             "options":  {
+
+                                                         }
+                                         }
+                      },
+                      {
+                          "id":  "41a61262-e700-42b3-ab84-c0e7eef969db",
+                          "name":  "Telegram: уведомить Мадину",
+                          "type":  "n8n-nodes-base.telegram",
+                          "typeVersion":  1.2,
+                          "position":  [
+                                           880,
+                                           0
+                                       ],
+                          "webhookId":  "df9f1399-c571-474c-8839-119a08f30432",
+                          "parameters":  {
+                                             "chatId":  "YOUR_TELEGRAM_CHAT_ID",
+                                             "text":  "={{ $(\u0027Описание ошибки\u0027).item.json.sendText }}",
+                                             "additionalFields":  {
+                                                                      "appendAttribution":  false
+                                                                  }
+                                         },
+                          "credentials":  {
+                                              "telegramApi":  {
+                                                                  "id":  "cogiFrvLauJs3Bl8",
+                                                                  "name":  "Telegram account 3"
+                                                              }
+                                          }
+                      }
+                  ],
+        "connections":  {
+                            "Error Trigger":  {
+                                                  "main":  [
+                                                               [
+                                                                   {
+                                                                       "node":  "Описание ошибки",
+                                                                       "type":  "main",
+                                                                       "index":  0
+                                                                   }
+                                                               ]
+                                                           ]
+                                              },
+                            "Описание ошибки":  {
+                                                    "main":  [
+                                                                 [
+                                                                     {
+                                                                         "node":  "Журнал: таблица aiva_log",
+                                                                         "type":  "main",
+                                                                         "index":  0
+                                                                     }
+                                                                 ]
+                                                             ]
+                                                },
+                            "Журнал: таблица aiva_log":  {
+                                                             "main":  [
+                                                                          [
+                                                                              {
+                                                                                  "node":  "Журнал: запись",
+                                                                                  "type":  "main",
+                                                                                  "index":  0
+                                                                              }
+                                                                          ]
+                                                                      ]
+                                                         },
+                            "Журнал: запись":  {
+                                                   "main":  [
+                                                                [
+                                                                    {
+                                                                        "node":  "Telegram: уведомить Мадину",
+                                                                        "type":  "main",
+                                                                        "index":  0
+                                                                    }
+                                                                ]
+                                                            ]
+                                               }
+                        },
+        "settings":  {
+                         "executionOrder":  "v1",
+                         "timezone":  "Asia/Almaty"
+                     },
+        "staticData":  null,
+        "meta":  null,
+        "nodeGroups":  [
+
+                       ],
+        "pinData":  {
+
+                    },
+        "versionId":  "ce0774fe-9081-4ee3-a82c-f554be079028",
+        "activeVersionId":  "ce0774fe-9081-4ee3-a82c-f554be079028",
+        "versionCounter":  1,
+        "triggerCount":  0,
+        "sourceWorkflowId":  null,
+        "tags":  [
+
+                 ],
+        "shared":  [
+                       {
+                           "updatedAt":  "2026-10-16T08:03:39.743Z",
+                           "createdAt":  "2026-10-16T08:03:39.743Z",
+                           "role":  "workflow:owner",
+                           "workflowId":  "AivaErrors000001",
+                           "projectId":  "Axaz7sxId9dvmgpC",
+                           "project":  {
+                                           "updatedAt":  "2026-09-07T08:14:47.421Z",
+                                           "createdAt":  "2026-09-07T08:09:13.306Z",
+                                           "id":  "Axaz7sxId9dvmgpC",
+                                           "name":  "Мадина Бауржан \u003cmadinabaurzhan88@gmail.com\u003e",
+                                           "type":  "personal",
+                                           "icon":  null,
+                                           "description":  null,
+                                           "customTelemetryTags":  [
+
+                                                                   ],
+                                           "creatorId":  "52ba67d7-a7e0-48ff-bb2e-8c9ade6b159a"
+                                       }
+                       }
+                   ],
+        "versionMetadata":  {
+                                "name":  null,
+                                "description":  null
+                            }
+    }
+]
